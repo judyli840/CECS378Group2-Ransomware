@@ -105,5 +105,4 @@ def ransom():
 if __name__ == '__main__':
     if path.exists("paths") is False:
         os.mkdir("paths")
-    ransom()
     decryption_screen()
