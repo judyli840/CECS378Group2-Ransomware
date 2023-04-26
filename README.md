@@ -9,14 +9,20 @@ It is strongly recomended that this code is ran in a controlled environment and 
 ## Tools and Libraries
 Python 3.10.0
 ### Libraries
-cryptography  
+cryptography 
+  
 os  
-http.server   
+  
+http.server 
+  
 tkinter   
-pyinstaller (for converting to exe file)  
+  
+pyinstaller (for converting to exe file) 
+  
 
 ## Dependencies
 to install the dependencies run:  
-```pip install cryptography```
-if you want to convert to exe:
+```pip install cryptography``` 
+  
+if you want to convert to exe:   
 ```pip install pyinstaller```
