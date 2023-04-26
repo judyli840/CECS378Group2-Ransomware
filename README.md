@@ -18,3 +18,5 @@ pyinstaller (for converting to exe file)
 ## Dependencies
 to install the dependencies run:  
 ```pip install cryptography```
+if you want to convert to exe:
+```pip install pyinstaller```
